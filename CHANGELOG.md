@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [8.0.2](https://github.com/capacitor-community/text-to-speech/compare/v8.0.1...v8.0.2) (2026-06-15)
+
+
+### Bug Fixes
+
+* **android:** update ProGuard file to use optimized version ([#163](https://github.com/capacitor-community/text-to-speech/issues/163)) ([ceb021f](https://github.com/capacitor-community/text-to-speech/commit/ceb021fb4cbb8a6adeeb8a3adb8d5c18a899d9fe)), closes [#162](https://github.com/capacitor-community/text-to-speech/issues/162)
+
 ## [8.0.1](https://github.com/capacitor-community/text-to-speech/compare/v8.0.0...v8.0.1) (2026-06-07)
 
 
