@@ -11,12 +11,12 @@ public class TextToSpeechPlugin: CAPPlugin, CAPBridgedPlugin {
     public let identifier = "TextToSpeechPlugin"
     public let jsName = "TextToSpeech"
     public let pluginMethods: [CAPPluginMethod] = [
-        CAPPluginMethod(name: "speak", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "stop", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "openInstall", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "getSupportedLanguages", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "getSupportedVoices", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "isLanguageSupported", returnType: CAPPluginReturnPromise)
+        CAPPluginMethod(name: "speak", returnType: .promise),
+        CAPPluginMethod(name: "stop", returnType: .promise),
+        CAPPluginMethod(name: "openInstall", returnType: .promise),
+        CAPPluginMethod(name: "getSupportedLanguages", returnType: .promise),
+        CAPPluginMethod(name: "getSupportedVoices", returnType: .promise),
+        CAPPluginMethod(name: "isLanguageSupported", returnType: .promise)
     ]
     private static let errorUnsupportedLanguage = "This language is not supported."
 
