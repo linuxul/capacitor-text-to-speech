@@ -3,6 +3,7 @@ package com.getcapacitor.community.tts
 import com.getcapacitor.JSObject
 import com.getcapacitor.Plugin
 import com.getcapacitor.PluginCall
+import com.getcapacitor.PluginException
 import com.getcapacitor.PluginMethod
 import com.getcapacitor.annotation.CapacitorPlugin
 
@@ -17,8 +18,7 @@ public class TextToSpeechPlugin : Plugin() {
     @PluginMethod
     public fun speak(call: PluginCall) {
         if (!implementation.isAvailable) {
-            call.unavailable("Not yet initialized or not available on this device.")
-            return
+            throw PluginException("Not yet initialized or not available on this device.", "UNAVAILABLE")
         }
 
         val text = call.getString("text", "") ?: ""
@@ -30,8 +30,7 @@ public class TextToSpeechPlugin : Plugin() {
         val queueStrategy = call.getInt("queueStrategy", 0) ?: 0
 
         if (!implementation.isLanguageSupported(lang)) {
-            call.reject(ERROR_UNSUPPORTED_LANGUAGE)
-            return
+            throw PluginException(ERROR_UNSUPPORTED_LANGUAGE)
         }
 
         val resultCallback =
@@ -63,8 +62,7 @@ public class TextToSpeechPlugin : Plugin() {
     @PluginMethod
     public fun stop(call: PluginCall) {
         if (!implementation.isAvailable) {
-            call.unavailable("Not yet initialized or not available on this device.")
-            return
+            throw PluginException("Not yet initialized or not available on this device.", "UNAVAILABLE")
         }
         try {
             implementation.stop()
