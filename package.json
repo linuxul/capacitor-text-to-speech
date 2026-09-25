@@ -1,6 +1,6 @@
 {
   "name": "@capacitor-community/text-to-speech",
-  "version": "8.0.2",
+  "version": "9.0.0",
   "description": "Capacitor plugin for synthesizing speech from text.",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -45,7 +45,7 @@
     "typescript": "^5.9.3"
   },
   "peerDependencies": {
-    "@capacitor/core": ">=8.0.0"
+    "@capacitor/core": ">=9.0.0"
   },
   "files": [
     "android/src/main/",
