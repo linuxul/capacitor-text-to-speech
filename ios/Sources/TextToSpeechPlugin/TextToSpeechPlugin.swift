@@ -10,19 +10,21 @@ import AVFoundation
 public class TextToSpeechPlugin: CAPPlugin, CAPBridgedPlugin {
     public let identifier = "TextToSpeechPlugin"
     public let jsName = "TextToSpeech"
+    // Every method stays synchronous: speak queues or flushes utterances and stop cancels them in the order of the
+    // calls, which async methods would not keep, and the others are reads that need no main thread.
     public let pluginMethods: [CAPPluginMethod] = [
-        CAPPluginMethod(name: "speak", returnType: .promise),
-        CAPPluginMethod(name: "stop", returnType: .promise),
-        CAPPluginMethod(name: "openInstall", returnType: .promise),
-        CAPPluginMethod(name: "getSupportedLanguages", returnType: .promise),
-        CAPPluginMethod(name: "getSupportedVoices", returnType: .promise),
-        CAPPluginMethod(name: "isLanguageSupported", returnType: .promise)
+        .promise("speak", TextToSpeechPlugin.speak),
+        .promise("stop", TextToSpeechPlugin.stop),
+        .promise("openInstall", TextToSpeechPlugin.openInstall),
+        .promise("getSupportedLanguages", TextToSpeechPlugin.getSupportedLanguages),
+        .promise("getSupportedVoices", TextToSpeechPlugin.getSupportedVoices),
+        .promise("isLanguageSupported", TextToSpeechPlugin.isLanguageSupported)
     ]
     private static let errorUnsupportedLanguage = "This language is not supported."
 
     private let implementation = TextToSpeech()
 
-    @objc public func speak(_ call: CAPPluginCall) {
+    public func speak(_ call: CAPPluginCall) throws {
         let text = call.getString("text") ?? ""
         let lang = call.getString("lang") ?? "en-US"
         let rate = call.getFloat("rate") ?? 1.0
@@ -34,34 +36,33 @@ public class TextToSpeechPlugin: CAPPlugin, CAPBridgedPlugin {
 
         let isLanguageSupported = implementation.isLanguageSupported(lang)
         guard isLanguageSupported else {
-            call.reject(TextToSpeechPlugin.errorUnsupportedLanguage)
-            return
+            throw CAPPluginError(TextToSpeechPlugin.errorUnsupportedLanguage)
         }
 
         do {
             try implementation.speak(text, lang, rate, pitch, category, volume, voice, queueStrategy, call)
         } catch {
-            call.reject(error.localizedDescription)
+            throw CAPPluginError(error.localizedDescription, underlyingError: error)
         }
     }
 
-    @objc public func stop(_ call: CAPPluginCall) {
+    public func stop(_ call: CAPPluginCall) {
         implementation.stop()
         call.resolve()
     }
 
-    @objc public func openInstall(_ call: CAPPluginCall) {
+    public func openInstall(_ call: CAPPluginCall) {
         call.resolve()
     }
 
-    @objc func getSupportedLanguages(_ call: CAPPluginCall) {
+    func getSupportedLanguages(_ call: CAPPluginCall) {
         let languages = self.implementation.getSupportedLanguages()
         call.resolve([
             "languages": languages
         ])
     }
 
-    @objc func getSupportedVoices(_ call: CAPPluginCall) {
+    func getSupportedVoices(_ call: CAPPluginCall) {
         let allVoices = AVSpeechSynthesisVoice.speechVoices()
         var res: [[String: Any]] = []
 
@@ -81,7 +82,7 @@ public class TextToSpeechPlugin: CAPPlugin, CAPBridgedPlugin {
         ])
     }
 
-    @objc func isLanguageSupported(_ call: CAPPluginCall) {
+    func isLanguageSupported(_ call: CAPPluginCall) {
         let lang = call.getString("lang") ?? ""
         let isLanguageSupported = self.implementation.isLanguageSupported(lang)
         call.resolve([
